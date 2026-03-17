@@ -1,0 +1,21 @@
+@startuml
+
+entity Cliente {
+  id
+  nombre
+}
+
+entity Solicitud {
+  id
+  monto
+}
+
+entity Evaluacion {
+  id
+  score
+}
+
+Cliente ||--o{ Solicitud
+Solicitud ||--|| Evaluacion
+
+@enduml

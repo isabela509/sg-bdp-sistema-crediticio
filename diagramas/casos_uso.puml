@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+
+actor "Oficial de Crédito"
+actor "Analista de Riesgo"
+actor "Cliente"
+
+rectangle Sistema {
+  (Registrar Solicitud)
+  (Evaluar Crédito)
+  (Consultar Estado)
+  (Aprobar Crédito)
+}
+
+"Oficial de Crédito" --> (Registrar Solicitud)
+"Oficial de Crédito" --> (Evaluar Crédito)
+"Cliente" --> (Consultar Estado)
+"Analista de Riesgo" --> (Aprobar Crédito)
+
+@enduml

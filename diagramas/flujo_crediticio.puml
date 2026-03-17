@@ -1,0 +1,16 @@
+@startuml
+start
+
+:Registrar Cliente;
+:Evaluar Finanzas;
+:Calcular Scoring;
+
+if (Aprobado?) then (Sí)
+  :Aprobar Crédito;
+  :Desembolso;
+else (No)
+  :Rechazo;
+endif
+
+stop
+@enduml

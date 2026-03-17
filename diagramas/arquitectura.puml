@@ -1,0 +1,28 @@
+@startuml
+title Arquitectura del Sistema SG-BDP
+
+actor "Oficial de Crédito" as Oficial
+
+node "App Móvil" {
+  component "Captura de Datos"
+}
+
+node "API Gateway" {
+  component "Autenticación"
+}
+
+node "Backend" {
+  component "Servicio de Solicitudes"
+}
+
+node "Motor de Scoring"
+
+node "Base de Datos"
+
+Oficial --> "Captura de Datos"
+"Captura de Datos" --> "Autenticación"
+"Autenticación" --> "Servicio de Solicitudes"
+"Servicio de Solicitudes" --> "Motor de Scoring"
+"Servicio de Solicitudes" --> "Base de Datos"
+
+@enduml
