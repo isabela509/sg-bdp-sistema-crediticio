@@ -3,4 +3,4 @@ Prototipo del Sistema SG-BDP
 Herramienta: Figma
 
 Link:
-(LINK DE FIGMA TERMINADO)
+https://www.figma.com/make/hbHr02IFaruH6SVr8KMB9x/SG-BDP_IngSoft?p=f&t=Y86C3yArANy89kGk-0&fullscreen=1
