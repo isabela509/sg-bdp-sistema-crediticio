@@ -1,0 +1,567 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Juan Pérez",
+      "email": "oficial@bdp.com.bo",
+      "rol": "oficial",
+      "password": "$2b$08$79U1MMVIDsvOgJW6WIYcAuylUWYVGIXYhrtUEf3X9pMj2VAP1vAti"
+    },
+    {
+      "id": 2,
+      "nombre": "Ana Gómez",
+      "email": "analista@bdp.com.bo",
+      "rol": "analista",
+      "password": "$2b$08$kfxvnehJD3QxRyaxJ8JVsuumTrvZ5kWmj6lbyJGjXXAN2o.e21jrC"
+    },
+    {
+      "id": 3,
+      "nombre": "Admin BDP",
+      "email": "admin@bdp.com.bo",
+      "rol": "administrador",
+      "password": "$2b$08$Ao7idoONYJeESG45BhkSruAPBOdSCCSjNI7djH.Sow6U7OGBdRzzO"
+    }
+  ],
+  "clientes": [
+    {
+      "id": 1,
+      "codigo": "CLI-001",
+      "tipo": "empresa",
+      "nombre": "Empresa ABC S.A.",
+      "nit": "1023456789",
+      "scoring": 570
+    },
+    {
+      "id": 2,
+      "codigo": "CLI-002",
+      "tipo": "empresa",
+      "nombre": "Constructora del Sur",
+      "nit": "1098765432",
+      "scoring": 0
+    }
+  ],
+  "solicitudes": [
+    {
+      "id": 1,
+      "codigo": "SOL-2026-002",
+      "clienteId": 1,
+      "clienteNombre": "Empresa ABC S.A.",
+      "monto": 250000,
+      "plazo": 36,
+      "destino": "Capital de inversión",
+      "estado": "Scoring Crediticio",
+      "paso": 3,
+      "evaluacion": {
+        "ratios": {
+          "liquidezCorriente": {
+            "valor": 2.5,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "indiceSolvencia": {
+            "valor": 1.8,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "icc": {
+            "valor": 0.35,
+            "limite": 0.4,
+            "tipo": "max",
+            "cumple": true
+          },
+          "ltv": {
+            "valor": 64.94,
+            "limite": 80,
+            "tipo": "max",
+            "cumple": true
+          }
+        },
+        "scoring": {
+          "score": 929,
+          "categoria": "BAJO",
+          "probabilidadIncumplimiento": 1.8,
+          "recomendacion": "APROBAR",
+          "detalleFactores": {
+            "historialCrediticio": 31.85,
+            "capacidadPago": 30,
+            "garantias": 18,
+            "antiguedadCliente": 9,
+            "sectorEconomico": 4
+          }
+        }
+      },
+      "oficialId": 1,
+      "creadoEn": "2026-06-16T17:08:44.102Z"
+    },
+    {
+      "id": 2,
+      "codigo": "SOL-2026-003",
+      "clienteId": 1,
+      "clienteNombre": "Empresa ABC S.A.",
+      "monto": 250000,
+      "plazo": 36,
+      "destino": "Capital de inversión",
+      "estado": "Scoring Crediticio",
+      "paso": 3,
+      "evaluacion": {
+        "ratios": {
+          "liquidezCorriente": {
+            "valor": 2.5,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "indiceSolvencia": {
+            "valor": 1.8,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "icc": {
+            "valor": 0.35,
+            "limite": 0.4,
+            "tipo": "max",
+            "cumple": true
+          },
+          "ltv": {
+            "valor": 64.94,
+            "limite": 80,
+            "tipo": "max",
+            "cumple": true
+          }
+        },
+        "scoring": {
+          "score": 929,
+          "categoria": "BAJO",
+          "probabilidadIncumplimiento": 1.8,
+          "recomendacion": "APROBAR",
+          "detalleFactores": {
+            "historialCrediticio": 31.85,
+            "capacidadPago": 30,
+            "garantias": 18,
+            "antiguedadCliente": 9,
+            "sectorEconomico": 4
+          }
+        }
+      },
+      "oficialId": 1,
+      "creadoEn": "2026-06-16T17:09:45.159Z"
+    },
+    {
+      "id": 3,
+      "codigo": "SOL-2026-004",
+      "clienteId": 1,
+      "clienteNombre": "Empresa ABC S.A.",
+      "monto": 2500000,
+      "plazo": 36,
+      "destino": "Capital de inversión",
+      "estado": "Scoring Crediticio",
+      "paso": 3,
+      "evaluacion": {
+        "ratios": {
+          "liquidezCorriente": {
+            "valor": 2.5,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "indiceSolvencia": {
+            "valor": 1.8,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "icc": {
+            "valor": 0.35,
+            "limite": 0.4,
+            "tipo": "max",
+            "cumple": true
+          },
+          "ltv": {
+            "valor": 64.94,
+            "limite": 80,
+            "tipo": "max",
+            "cumple": true
+          }
+        },
+        "scoring": {
+          "score": 929,
+          "categoria": "BAJO",
+          "probabilidadIncumplimiento": 1.8,
+          "recomendacion": "APROBAR",
+          "detalleFactores": {
+            "historialCrediticio": 31.85,
+            "capacidadPago": 30,
+            "garantias": 18,
+            "antiguedadCliente": 9,
+            "sectorEconomico": 4
+          }
+        }
+      },
+      "oficialId": 1,
+      "creadoEn": "2026-06-16T17:10:09.354Z"
+    },
+    {
+      "id": 4,
+      "codigo": "SOL-2026-005",
+      "clienteId": 1,
+      "clienteNombre": "Empresa ABC S.A.",
+      "monto": 250000,
+      "plazo": 36,
+      "destino": "Capital de inversión",
+      "estado": "Scoring Crediticio",
+      "paso": 3,
+      "evaluacion": {
+        "ratios": {
+          "liquidezCorriente": {
+            "valor": 2.5,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "indiceSolvencia": {
+            "valor": 1.8,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "icc": {
+            "valor": 0.35,
+            "limite": 0.4,
+            "tipo": "max",
+            "cumple": true
+          },
+          "ltv": {
+            "valor": 64.94,
+            "limite": 80,
+            "tipo": "max",
+            "cumple": true
+          }
+        },
+        "scoring": {
+          "score": 929,
+          "categoria": "BAJO",
+          "probabilidadIncumplimiento": 1.8,
+          "recomendacion": "APROBAR",
+          "detalleFactores": {
+            "historialCrediticio": 31.85,
+            "capacidadPago": 30,
+            "garantias": 18,
+            "antiguedadCliente": 9,
+            "sectorEconomico": 4
+          }
+        }
+      },
+      "oficialId": 1,
+      "creadoEn": "2026-06-16T17:10:39.815Z"
+    },
+    {
+      "id": 5,
+      "codigo": "SOL-2026-006",
+      "clienteId": 1,
+      "clienteNombre": "Empresa ABC S.A.",
+      "monto": 250000,
+      "plazo": 36,
+      "destino": "Capital de inversión",
+      "estado": "Scoring Crediticio",
+      "paso": 3,
+      "evaluacion": {
+        "ratios": {
+          "liquidezCorriente": {
+            "valor": 0.03,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": false
+          },
+          "indiceSolvencia": {
+            "valor": 1.8,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "icc": {
+            "valor": 0.35,
+            "limite": 0.4,
+            "tipo": "max",
+            "cumple": true
+          },
+          "ltv": {
+            "valor": 64.94,
+            "limite": 80,
+            "tipo": "max",
+            "cumple": true
+          }
+        },
+        "scoring": {
+          "score": 854,
+          "categoria": "BAJO",
+          "probabilidadIncumplimiento": 3.7,
+          "recomendacion": "APROBAR",
+          "detalleFactores": {
+            "historialCrediticio": 31.85,
+            "capacidadPago": 22.5,
+            "garantias": 18,
+            "antiguedadCliente": 9,
+            "sectorEconomico": 4
+          }
+        }
+      },
+      "oficialId": 1,
+      "creadoEn": "2026-06-16T17:12:05.358Z"
+    },
+    {
+      "id": 6,
+      "codigo": "SOL-2026-007",
+      "clienteId": 1,
+      "clienteNombre": "Empresa ABC S.A.",
+      "monto": 250000,
+      "plazo": 36,
+      "destino": "Capital de inversión",
+      "estado": "Scoring Crediticio",
+      "paso": 3,
+      "evaluacion": {
+        "ratios": {
+          "liquidezCorriente": {
+            "valor": 0.03,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": false
+          },
+          "indiceSolvencia": {
+            "valor": 1.8,
+            "limite": 1.5,
+            "tipo": "min",
+            "cumple": true
+          },
+          "icc": {
+            "valor": 0.35,
+            "limite": 0.4,
+            "tipo": "max",
+            "cumple": true
+          },
+          "ltv": {
+            "valor": 64.94,
+            "limite": 80,
+            "tipo": "max",
+            "cumple": true
+          }
+        },
+        "scoring": {
+          "score": 570,
+          "categoria": "MEDIO",
+          "probabilidadIncumplimiento": 10.8,
+          "recomendacion": "RECHAZAR",
+          "detalleFactores": {
+            "historialCrediticio": 3.5,
+            "capacidadPago": 22.5,
+            "garantias": 18,
+            "antiguedadCliente": 9,
+            "sectorEconomico": 4
+          }
+        }
+      },
+      "oficialId": 1,
+      "creadoEn": "2026-06-16T17:13:10.113Z"
+    }
+  ],
+  "auditoria": [
+    {
+      "id": 1,
+      "usuarioId": 1,
+      "accion": "LOGIN",
+      "entidad": "usuarios",
+      "detalle": {
+        "email": "oficial@bdp.com.bo"
+      },
+      "fecha": "2026-06-16T17:08:34.540Z"
+    },
+    {
+      "id": 2,
+      "usuarioId": 1,
+      "accion": "INSERT",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-002",
+        "monto": 250000
+      },
+      "fecha": "2026-06-16T17:08:44.102Z"
+    },
+    {
+      "id": 3,
+      "usuarioId": 1,
+      "accion": "UPDATE",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-002",
+        "score": 929
+      },
+      "fecha": "2026-06-16T17:08:49.655Z"
+    },
+    {
+      "id": 4,
+      "usuarioId": 1,
+      "accion": "INSERT",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-003",
+        "monto": 250000
+      },
+      "fecha": "2026-06-16T17:09:45.159Z"
+    },
+    {
+      "id": 5,
+      "usuarioId": 1,
+      "accion": "UPDATE",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-003",
+        "score": 929
+      },
+      "fecha": "2026-06-16T17:09:48.256Z"
+    },
+    {
+      "id": 6,
+      "usuarioId": 1,
+      "accion": "LOGIN",
+      "entidad": "usuarios",
+      "detalle": {
+        "email": "oficial@bdp.com.bo"
+      },
+      "fecha": "2026-06-16T17:09:57.964Z"
+    },
+    {
+      "id": 7,
+      "usuarioId": 1,
+      "accion": "LOGIN",
+      "entidad": "usuarios",
+      "detalle": {
+        "email": "oficial@bdp.com.bo"
+      },
+      "fecha": "2026-06-16T17:10:03.609Z"
+    },
+    {
+      "id": 8,
+      "usuarioId": 1,
+      "accion": "INSERT",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-004",
+        "monto": 2500000
+      },
+      "fecha": "2026-06-16T17:10:09.354Z"
+    },
+    {
+      "id": 9,
+      "usuarioId": 1,
+      "accion": "UPDATE",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-004",
+        "score": 929
+      },
+      "fecha": "2026-06-16T17:10:11.370Z"
+    },
+    {
+      "id": 10,
+      "usuarioId": 1,
+      "accion": "LOGIN",
+      "entidad": "usuarios",
+      "detalle": {
+        "email": "oficial@bdp.com.bo"
+      },
+      "fecha": "2026-06-16T17:10:36.470Z"
+    },
+    {
+      "id": 11,
+      "usuarioId": 1,
+      "accion": "INSERT",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-005",
+        "monto": 250000
+      },
+      "fecha": "2026-06-16T17:10:39.815Z"
+    },
+    {
+      "id": 12,
+      "usuarioId": 1,
+      "accion": "UPDATE",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-005",
+        "score": 929
+      },
+      "fecha": "2026-06-16T17:10:42.330Z"
+    },
+    {
+      "id": 13,
+      "usuarioId": 1,
+      "accion": "LOGIN",
+      "entidad": "usuarios",
+      "detalle": {
+        "email": "oficial@bdp.com.bo"
+      },
+      "fecha": "2026-06-16T17:11:58.566Z"
+    },
+    {
+      "id": 14,
+      "usuarioId": 1,
+      "accion": "INSERT",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-006",
+        "monto": 250000
+      },
+      "fecha": "2026-06-16T17:12:05.358Z"
+    },
+    {
+      "id": 15,
+      "usuarioId": 1,
+      "accion": "UPDATE",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-006",
+        "score": 854
+      },
+      "fecha": "2026-06-16T17:12:07.943Z"
+    },
+    {
+      "id": 16,
+      "usuarioId": 1,
+      "accion": "LOGIN",
+      "entidad": "usuarios",
+      "detalle": {
+        "email": "oficial@bdp.com.bo"
+      },
+      "fecha": "2026-06-16T17:13:06.776Z"
+    },
+    {
+      "id": 17,
+      "usuarioId": 1,
+      "accion": "INSERT",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-007",
+        "monto": 250000
+      },
+      "fecha": "2026-06-16T17:13:10.113Z"
+    },
+    {
+      "id": 18,
+      "usuarioId": 1,
+      "accion": "UPDATE",
+      "entidad": "solicitudes",
+      "detalle": {
+        "codigo": "SOL-2026-007",
+        "score": 570
+      },
+      "fecha": "2026-06-16T17:13:12.016Z"
+    }
+  ],
+  "secuencias": {
+    "solicitud": 7,
+    "auditoria": 19
+  }
+}

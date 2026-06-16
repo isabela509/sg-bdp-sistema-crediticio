@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG-BDP · Sistema de Gestión Crediticia</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --sidebar:#0d2137; --sidebar2:#0a1a2c; --active:#1fa0e0;
+    --bg:#f3f5f8; --card:#ffffff; --border:#e4e9f0;
+    --text:#1c2b3a; --muted:#7a8aa0; --cyan:#1fa0e0;
+    --green:#16a085; --red:#e74c3c; --amber:#e67e22; --navy:#1f3864;
+  }
+  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+  .hidden{display:none !important;}
+  input,select{font-family:inherit;}
+  /* ===== LOGIN ===== */
+  #login{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:20px;background:linear-gradient(135deg,#0a1a2c,#0d2137);}
+  .logo-box{width:54px;height:54px;background:var(--cyan);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px;}
+  .login-card{background:#13243d;border:1px solid #22344f;border-radius:14px;padding:28px;width:100%;max-width:380px;color:#e8eef5;}
+  .login-card h1{font-size:22px;text-align:center;margin-bottom:4px;}
+  .login-card .sub{color:#8fa3bd;text-align:center;font-size:13px;margin-bottom:22px;}
+  #login label{display:block;font-size:13px;font-weight:600;margin:12px 0 6px;color:#e8eef5;}
+  #login input{width:100%;padding:11px 12px;background:#0f1d31;border:1px solid #2a3e5c;border-radius:8px;color:#e8eef5;font-size:14px;}
+  #login input:focus{outline:none;border-color:var(--cyan);}
+  .btn{padding:11px 18px;background:var(--cyan);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .btn:hover{opacity:.92;} .btn.green{background:var(--green);} .btn.red{background:var(--red);}
+  .btn.full{width:100%;margin-top:18px;} .btn.sm{padding:7px 13px;font-size:12.5px;}
+  .btn.ghost{background:transparent;border:1px solid var(--cyan);color:var(--cyan);}
+  .err{color:#ff6b6b;font-size:13px;text-align:center;margin-top:10px;min-height:18px;}
+  .hint{font-size:12px;color:#8fa3bd;text-align:center;margin-top:16px;line-height:1.7;}
+  /* ===== LAYOUT ===== */
+  #app{display:flex;min-height:100vh;}
+  .sidebar{width:230px;background:var(--sidebar);color:#cdd9e8;flex-shrink:0;display:flex;flex-direction:column;position:fixed;height:100vh;overflow-y:auto;}
+  .sidebar .brand{padding:18px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1c3a52;}
+  .sidebar .brand .lg{width:34px;height:34px;background:var(--cyan);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+  .sidebar .brand b{font-size:15px;color:#fff;} .sidebar .brand small{font-size:10px;color:#7a90a8;display:block;}
+  .nav{padding:10px 0;flex:1;}
+  .nav a{display:flex;align-items:center;gap:11px;padding:11px 20px;color:#aebed0;text-decoration:none;font-size:13.5px;cursor:pointer;border-left:3px solid transparent;}
+  .nav a:hover{background:#11283f;color:#fff;}
+  .nav a.active{background:#11283f;color:#fff;border-left-color:var(--cyan);}
+  .nav a .ic{width:18px;text-align:center;font-size:15px;}
+  .main{flex:1;margin-left:230px;}
+  .topbar{background:#fff;border-bottom:1px solid var(--border);padding:12px 26px;display:flex;align-items:center;justify-content:flex-end;gap:18px;position:sticky;top:0;z-index:10;}
+  .topbar .zt{font-size:12px;color:var(--green);}
+  .topbar .chip{display:flex;align-items:center;gap:9px;}
+  .topbar .chip .av{width:32px;height:32px;border-radius:50%;background:var(--cyan);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;}
+  .topbar .chip b{font-size:13px;} .topbar .chip small{font-size:11px;color:var(--muted);display:block;}
+  .content{padding:26px;}
+  h2.title{font-size:24px;margin-bottom:3px;} .subtitle{color:var(--muted);font-size:13px;margin-bottom:22px;}
+  /* ===== COMPONENTS ===== */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:22px;}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;}
+  .kpi .lab{color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;}
+  .kpi .ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .kpi .v{font-size:27px;font-weight:700;margin-top:8px;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:18px;}
+  .card h3{font-size:15px;margin-bottom:15px;color:var(--navy);}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th{text-align:left;color:var(--muted);font-weight:600;padding:9px 8px;border-bottom:2px solid var(--border);font-size:12px;}
+  td{padding:11px 8px;border-bottom:1px solid #eef2f7;}
+  .badge{padding:3px 11px;border-radius:20px;font-size:11px;font-weight:600;}
+  .b-init{background:#eef2f7;color:#5a6b80;} .b-score{background:#e1f0fb;color:#1577b8;}
+  .b-aprob{background:#e3f7ef;color:#0f8a63;} .b-rech{background:#fdeaea;color:#c0392b;} .b-pend{background:#fdf2e3;color:#b9770e;}
+  label{display:block;font-size:12.5px;font-weight:600;margin:12px 0 6px;color:var(--text);}
+  .content input,.content select{width:100%;padding:10px 12px;background:#fff;border:1px solid #d5dde8;border-radius:8px;font-size:14px;color:var(--text);}
+  .content input:focus,.content select:focus{outline:none;border-color:var(--cyan);}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  /* score circle */
+  .score-wrap{display:flex;gap:30px;align-items:center;flex-wrap:wrap;}
+  .score-circle{width:130px;height:130px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:8px solid var(--green);flex-shrink:0;}
+  .score-circle .n{font-size:34px;font-weight:700;} .score-circle .d{font-size:11px;color:var(--muted);}
+  .factor{margin:11px 0;} .factor .t{display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:5px;}
+  .bar{height:9px;background:#eef2f7;border-radius:6px;overflow:hidden;} .bar i{display:block;height:100%;border-radius:6px;}
+  .ratio-card{border:1px solid var(--border);border-radius:10px;padding:14px;}
+  .ratio-card .rv{font-size:24px;font-weight:700;margin:4px 0;}
+  .ratio-card .rb{font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-top:6px;}
+  .minibar{height:6px;background:#eef2f7;border-radius:4px;margin-top:5px;overflow:hidden;} .minibar i{display:block;height:100%;background:var(--green);}
+  .steps{display:flex;justify-content:space-between;position:relative;margin:30px 10px;}
+  .steps::before{content:'';position:absolute;top:16px;left:5%;right:5%;height:3px;background:#e4e9f0;z-index:0;}
+  .step{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1;flex:1;}
+  .step .circ{width:34px;height:34px;border-radius:50%;background:#fff;border:3px solid #e4e9f0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--muted);}
+  .step.done .circ{background:var(--cyan);border-color:var(--cyan);color:#fff;}
+  .step .lb{font-size:11px;color:var(--muted);text-align:center;max-width:90px;}
+  .step.done .lb{color:var(--text);font-weight:600;}
+  .tag{font-size:11px;padding:2px 8px;border-radius:6px;background:#eef2f7;color:var(--muted);}
+  .pill{display:inline-block;padding:4px 10px;border-radius:7px;font-size:12px;font-weight:600;}
+  @media(max-width:760px){.sidebar{width:60px;}.sidebar .brand b,.sidebar .brand small,.nav a span{display:none;}.main{margin-left:60px;}.grid2{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="login">
+  <div class="logo-box">🛡️</div>
+  <div class="login-card">
+    <h1>Portal Administrativo</h1>
+    <div class="sub">Sistema de Gestión Crediticia SG-BDP</div>
+    <label>Correo electrónico</label>
+    <input id="email" type="email" value="oficial@bdp.com.bo">
+    <label>Contraseña</label>
+    <input id="password" type="password" value="123456">
+    <button class="btn full" onclick="login()">Ingresar</button>
+    <div class="err" id="loginErr"></div>
+    <div class="hint"><b>Usuarios de prueba</b> (contraseña: 123456)<br>
+      oficial@bdp.com.bo · analista@bdp.com.bo · admin@bdp.com.bo</div>
+  </div>
+  <p class="hint" style="margin-top:18px">🔒 Conexión segura · Autenticación JWT · Zero Trust</p>
+</div>
+
+<!-- ===== APP ===== -->
+<div id="app" class="hidden">
+  <aside class="sidebar">
+    <div class="brand"><div class="lg">🛡️</div><div><b>SG-BDP</b><small>Sistema de Gestión Crediticia</small></div></div>
+    <nav class="nav" id="nav">
+      <a data-v="dashboard" class="active"><span class="ic">▣</span><span>Dashboard</span></a>
+      <a data-v="flujo"><span class="ic">⇄</span><span>Flujo del Proceso</span></a>
+      <a data-v="nueva"><span class="ic">＋</span><span>Nueva Solicitud</span></a>
+      <a data-v="evaluacion"><span class="ic">▤</span><span>Evaluación Financiera</span></a>
+      <a data-v="scoring"><span class="ic">📈</span><span>Motor de Scoring</span></a>
+      <a data-v="garantias"><span class="ic">◎</span><span>Gestión de Garantías</span></a>
+      <a data-v="documentos"><span class="ic">🗎</span><span>Documentos</span></a>
+      <a data-v="clientes"><span class="ic">👥</span><span>Clientes</span></a>
+      <a data-v="reportes"><span class="ic">📊</span><span>Reportes</span></a>
+      <a data-v="config"><span class="ic">⚙</span><span>Configuración</span></a>
+    </nav>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <div class="zt">✔ Zero Trust · MFA Activo</div>
+      <div class="chip"><div class="av" id="uAv">JP</div><div><b id="uName"></b><small id="uRol"></small></div>
+        <button class="btn sm ghost" onclick="logout()">Salir</button></div>
+    </div>
+    <div class="content" id="view"></div>
+  </div>
+</div>
+
+<script>
+let TOKEN=null,USER=null,CLIENTES=[],SOLS=[],CURRENT='dashboard';
+const $=id=>document.getElementById(id);
+async function api(m,u,b){const r=await fetch(u,{method:m,headers:{'Content-Type':'application/json',...(TOKEN?{Authorization:'Bearer '+TOKEN}:{})},body:b?JSON.stringify(b):undefined});const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.error||'Error '+r.status);return d;}
+function rolLabel(r){return {oficial:'Oficial de Crédito',analista:'Analista de Riesgo',administrador:'Administrador'}[r]||r;}
+
+async function login(){
+  $('loginErr').textContent='';
+  try{
+    const d=await api('POST','/api/login',{email:$('email').value,password:$('password').value});
+    TOKEN=d.token;USER=d.usuario;
+    $('login').classList.add('hidden');$('app').classList.remove('hidden');
+    $('uName').textContent=USER.nombre;$('uRol').textContent=rolLabel(USER.rol);
+    $('uAv').textContent=USER.nombre.split(' ').map(x=>x[0]).slice(0,2).join('');
+    CLIENTES=await api('GET','/api/clientes');
+    await loadSols(); render('dashboard');
+  }catch(e){$('loginErr').textContent=e.message;}
+}
+function logout(){TOKEN=null;USER=null;$('app').classList.add('hidden');$('login').classList.remove('hidden');}
+async function loadSols(){SOLS=await api('GET','/api/solicitudes');}
+
+document.getElementById('nav').addEventListener('click',e=>{
+  const a=e.target.closest('a'); if(!a)return;
+  document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('active'));
+  a.classList.add('active'); render(a.dataset.v);
+});
+
+async function render(v){
+  CURRENT=v; await loadSols();
+  const V=$('view');
+  if(v==='dashboard')V.innerHTML=vDashboard();
+  else if(v==='flujo')V.innerHTML=vFlujo();
+  else if(v==='nueva')V.innerHTML=vNueva();
+  else if(v==='evaluacion')V.innerHTML=vEval();
+  else if(v==='scoring')V.innerHTML=vScoring();
+  else if(v==='garantias')V.innerHTML=vGarantias();
+  else if(v==='documentos')V.innerHTML=vDocumentos();
+  else if(v==='clientes')V.innerHTML=vClientes();
+  else if(v==='reportes')V.innerHTML=vReportes();
+  else if(v==='config')V.innerHTML=vConfig();
+  if(v==='dashboard')drawDashCharts();
+  if(v==='evaluacion')drawEvalChart();
+  if(v==='reportes')drawReportes();
+}
+
+function stats(){return{total:SOLS.length,aprob:SOLS.filter(s=>s.estado==='Aprobación Final').length,proc:SOLS.filter(s=>['Solicitud Inicial','Scoring Crediticio'].includes(s.estado)).length,rech:SOLS.filter(s=>s.estado==='Rechazado').length};}
+function badge(e){const m={'Solicitud Inicial':['b-init','Solicitud Inicial'],'Scoring Crediticio':['b-score','Scoring Calculado'],'Aprobación Final':['b-aprob','Aprobado'],'Rechazado':['b-rech','Rechazado']};const[c,t]=m[e]||['b-init',e];return `<span class="badge ${c}">${t}</span>`;}
+function evaluadas(){return SOLS.filter(s=>s.evaluacion);}
+
+// ===== DASHBOARD =====
+function vDashboard(){
+  const s=stats();
+  return `<h2 class="title">Dashboard</h2><div class="subtitle">Resumen general del sistema de gestión crediticia</div>
+  <div class="kpis">
+    ${kpi('Solicitudes Activas',s.proc,'#e1f0fb','📄','var(--cyan)')}
+    ${kpi('Créditos Aprobados',s.aprob,'#e3f7ef','✓','var(--green)')}
+    ${kpi('En Proceso',s.proc,'#fdf2e3','⏱','var(--amber)')}
+    ${kpi('Rechazados',s.rech,'#fdeaea','⚠','var(--red)')}
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Solicitudes por Estado</h3><canvas id="chEstado" height="200"></canvas></div>
+    <div class="card"><h3>Distribución de Montos</h3><canvas id="chMonto" height="200"></canvas></div>
+  </div>
+  <div class="card"><h3>Solicitudes Recientes</h3>
+    <table><thead><tr><th>Código</th><th>Cliente</th><th>Monto (Bs)</th><th>Estado</th><th>Score</th><th>Acción</th></tr></thead>
+    <tbody>${SOLS.length?SOLS.slice().reverse().map(rowSol).join(''):'<tr><td colspan="6" style="color:var(--muted)">Sin solicitudes. Ve a «Nueva Solicitud».</td></tr>'}</tbody></table>
+  </div>`;
+}
+function kpi(lab,val,bg,ic,col){return `<div class="kpi"><div class="lab"><span>${lab}</span><span class="ic" style="background:${bg};color:${col}">${ic}</span></div><div class="v">${val}</div></div>`;}
+function rowSol(s){return `<tr><td><b>${s.codigo}</b></td><td>${s.clienteNombre}</td><td>${s.monto.toLocaleString()}</td><td>${badge(s.estado)}</td><td>${s.evaluacion?s.evaluacion.scoring.score:'—'}</td><td>${accion(s)}</td></tr>`;}
+function accion(s){
+  if(USER.rol==='oficial'&&s.estado==='Solicitud Inicial')return `<button class="btn sm" onclick="doEval(${s.id})">Evaluar</button>`;
+  if(USER.rol==='analista'&&s.estado==='Scoring Crediticio')return `<button class="btn sm green" onclick="decidir(${s.id},'aprobar')">Aprobar</button> <button class="btn sm red" onclick="decidir(${s.id},'rechazar')">Rechazar</button>`;
+  if(s.evaluacion)return `<button class="btn sm ghost" onclick="goScoring(${s.id})">Ver Detalle</button>`;
+  return '<span style="color:var(--muted)">—</span>';
+}
+function drawDashCharts(){
+  const s=stats();
+  new Chart($('chEstado'),{type:'doughnut',data:{labels:['Aprobado','En proceso','Rechazado'],datasets:[{data:[s.aprob||0.001,s.proc,s.rech],backgroundColor:['#16a085','#e67e22','#e74c3c']}]},options:{plugins:{legend:{position:'bottom'}}}});
+  const porCliente={};SOLS.forEach(x=>porCliente[x.clienteNombre]=(porCliente[x.clienteNombre]||0)+x.monto);
+  new Chart($('chMonto'),{type:'bar',data:{labels:Object.keys(porCliente).length?Object.keys(porCliente):['—'],datasets:[{label:'Monto Bs',data:Object.values(porCliente).length?Object.values(porCliente):[0],backgroundColor:'#1fa0e0'}]},options:{plugins:{legend:{display:false}}}});
+}
+
+// ===== FLUJO =====
+function vFlujo(){
+  const pasos=['Solicitud Inicial','Evaluación Financiera','Scoring Crediticio','Validación Garantías','Aprobación Final','Desembolso'];
+  const sol=SOLS.slice().reverse()[0];
+  const pasoActual=sol?sol.paso:0;
+  return `<h2 class="title">Flujo del Proceso Crediticio</h2><div class="subtitle">Seguimiento del proceso paso a paso</div>
+  <div class="card">
+    <div class="steps">${pasos.map((p,i)=>`<div class="step ${i<pasoActual?'done':''}"><div class="circ">${i<pasoActual?'✓':i+1}</div><div class="lb">${p}</div></div>`).join('')}</div>
+    ${sol?`<p style="margin-top:14px"><b>Solicitud actual:</b> ${sol.codigo} — ${sol.clienteNombre} · Estado: ${badge(sol.estado)}</p>`:'<p style="color:var(--muted)">No hay solicitudes en proceso. Registra una en «Nueva Solicitud».</p>'}
+  </div>
+  <div class="card"><h3>Etapas del proceso</h3>
+    <table><thead><tr><th>Paso</th><th>Etapa</th><th>Responsable</th></tr></thead><tbody>
+      <tr><td>1</td><td>Solicitud Inicial</td><td>Oficial de Crédito</td></tr>
+      <tr><td>2</td><td>Evaluación Financiera</td><td>Oficial de Crédito</td></tr>
+      <tr><td>3</td><td>Scoring Crediticio</td><td>Sistema / Oficial</td></tr>
+      <tr><td>4</td><td>Validación de Garantías</td><td>Oficial de Crédito</td></tr>
+      <tr><td>5</td><td>Aprobación Final</td><td>Analista de Riesgo</td></tr>
+      <tr><td>6</td><td>Desembolso</td><td>Oficial de Crédito</td></tr>
+    </tbody></table></div>`;
+}
+
+// ===== NUEVA =====
+function vNueva(){
+  return `<h2 class="title">Nueva Solicitud</h2><div class="subtitle">Registro de una nueva solicitud de crédito</div>
+  <div class="card" style="max-width:680px">
+    <h3>Datos de la solicitud</h3>
+    <div class="row"><div><label>Cliente</label><select id="nCli">${CLIENTES.map(c=>`<option value="${c.id}">${c.nombre}</option>`).join('')}</select></div>
+      <div><label>Destino del crédito</label><input id="nDest" value="Capital de inversión"></div></div>
+    <div class="row" style="margin-top:6px"><div><label>Monto solicitado (Bs)</label><input id="nMonto" type="number" value="250000"></div>
+      <div><label>Plazo (meses)</label><input id="nPlazo" type="number" value="36"></div></div>
+    <button class="btn full" onclick="crear()" style="max-width:220px">Registrar solicitud</button>
+    <div class="err" id="nErr"></div>
+  </div>`;
+}
+async function crear(){
+  $('nErr').textContent='';
+  try{await api('POST','/api/solicitudes',{clienteId:$('nCli').value,monto:$('nMonto').value,plazo:$('nPlazo').value,destino:$('nDest').value});
+    setActive('dashboard');render('dashboard');
+  }catch(e){$('nErr').textContent=e.message;}
+}
+
+// ===== EVALUACIÓN =====
+function vEval(){
+  const sol=evaluadas().slice().reverse()[0];
+  if(!sol)return tituloVacio('Evaluación Financiera','Análisis de indicadores financieros del solicitante','Aún no hay evaluaciones. Registra una solicitud y presiona «Evaluar».');
+  const r=sol.evaluacion.ratios;
+  return `<h2 class="title">Evaluación Financiera</h2><div class="subtitle">Análisis de indicadores financieros del solicitante</div>
+  <div class="card"><div style="display:flex;justify-content:space-between"><div><b style="font-size:17px">${sol.clienteNombre}</b><div style="color:var(--muted);font-size:12px">Solicitud: ${sol.codigo}</div></div>
+    <div style="text-align:right"><div style="color:var(--muted);font-size:12px">Monto Solicitado</div><b style="font-size:20px">Bs ${sol.monto.toLocaleString()}</b><div style="color:var(--muted);font-size:12px">Plazo: ${sol.plazo} meses</div></div></div></div>
+  <div class="kpis">
+    ${ratioCard('Liquidez Corriente',r.liquidezCorriente,'Capacidad de cubrir obligaciones de corto plazo')}
+    ${ratioCard('Índice de Solvencia',r.indiceSolvencia,'Relación entre activos y pasivos totales')}
+    ${ratioCard('ICC (Cobertura Cuotas)',r.icc,'Porcentaje de ingresos comprometido en cuotas')}
+    ${ratioCard('LTV (Loan to Value)',r.ltv,'Porcentaje del crédito sobre la garantía')}
+  </div>
+  <div class="card"><h3>Ratios Financieros vs. Mínimos Requeridos</h3><canvas id="chRatios" height="120"></canvas></div>`;
+}
+function ratioCard(lab,r,desc){
+  const pct=Math.min(100,r.tipo==='min'?r.valor/(r.limite*1.6)*100:(1-Math.min(1,r.valor/(r.limite*1.5)))*100+30);
+  return `<div class="kpi"><div class="lab"><span>${lab}</span><span class="pill ${r.cumple?'b-aprob':'b-rech'}">${r.cumple?'✓':'✗'}</span></div>
+    <div class="v">${r.valor}</div><div class="minibar"><i style="width:${Math.max(15,Math.min(100,pct))}%;background:${r.cumple?'var(--green)':'var(--red)'}"></i></div>
+    <div class="rb" style="font-size:11px;color:var(--muted);display:flex;justify-content:space-between;margin-top:5px"><span>Benchmark</span><span>${r.tipo==='min'?'≥':'≤'} ${r.limite}</span></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px">${desc}</div></div>`;
+}
+function drawEvalChart(){
+  const sol=evaluadas().slice().reverse()[0]; if(!sol||!$('chRatios'))return;
+  const r=sol.evaluacion.ratios;
+  new Chart($('chRatios'),{type:'bar',data:{labels:['Liquidez','Solvencia','ICC','LTV'],datasets:[{label:'Valor',data:[r.liquidezCorriente.valor,r.indiceSolvencia.valor,r.icc.valor,r.ltv.valor/100],backgroundColor:[r.liquidezCorriente.cumple?'#16a085':'#e74c3c',r.indiceSolvencia.cumple?'#16a085':'#e74c3c',r.icc.cumple?'#16a085':'#e74c3c',r.ltv.cumple?'#16a085':'#e74c3c']}]},options:{plugins:{legend:{display:false}}}});
+}
+
+// ===== SCORING =====
+let SCORING_FOCUS=null;
+function goScoring(id){SCORING_FOCUS=id;setActive('scoring');render('scoring');}
+function vScoring(){
+  let sol=SCORING_FOCUS?evaluadas().find(s=>s.id===SCORING_FOCUS):evaluadas().slice().reverse()[0];
+  SCORING_FOCUS=null;
+  if(!sol)return tituloVacio('Motor de Scoring','Evaluación automatizada del riesgo crediticio','Aún no hay scoring calculado. Registra una solicitud y presiona «Evaluar».');
+  const sc=sol.evaluacion.scoring;
+  const col=sc.categoria==='BAJO'?'var(--green)':sc.categoria==='MEDIO'?'var(--amber)':'var(--red)';
+  const f=sc.detalleFactores;
+  const factores=[['Historial Crediticio',f.historialCrediticio,35,'#16a085'],['Capacidad de Pago',f.capacidadPago,30,'#1fa0e0'],['Garantías',f.garantias,20,'#9b59b6'],['Antigüedad del Cliente',f.antiguedadCliente,10,'#e67e22'],['Sector Económico',f.sectorEconomico,5,'#e91e8c']];
+  return `<h2 class="title">Motor de Scoring</h2><div class="subtitle">Evaluación automatizada del riesgo crediticio</div>
+  <div class="card"><div style="display:flex;justify-content:space-between"><div><b style="font-size:16px">${sol.clienteNombre}</b><div style="color:var(--muted);font-size:12px">${sol.codigo}</div></div>
+    <div style="text-align:right"><div style="color:var(--muted);font-size:12px">Monto Solicitado</div><b style="font-size:19px">Bs ${sol.monto.toLocaleString()}</b></div></div></div>
+  <div class="card"><div class="score-wrap">
+    <div class="score-circle" style="border-color:${col}"><div class="n" style="color:${col}">${sc.score}</div><div class="d">/1000</div></div>
+    <div style="flex:1;min-width:200px"><b style="font-size:18px;color:${col}">Riesgo ${sc.categoria}</b><div style="color:var(--muted);font-size:13px;margin-top:4px">Probabilidad de Incumplimiento: <b>${sc.probabilidadIncumplimiento}%</b></div>
+      <div style="margin-top:8px"><span class="pill ${sc.recomendacion==='APROBAR'?'b-aprob':'b-rech'}">Recomendación: ${sc.recomendacion}</span></div></div>
+  </div></div>
+  <div class="card"><h3>Factores del Scoring (Ponderación)</h3>
+    ${factores.map(([n,v,max,c])=>`<div class="factor"><div class="t"><span>● ${n}</span><span>${v.toFixed(1)} / ${max} pts</span></div><div class="bar"><i style="width:${v/max*100}%;background:${c}"></i></div></div>`).join('')}
+  </div>
+  ${USER.rol==='analista'&&sol.estado==='Scoring Crediticio'?`<div class="card"><h3>Decisión</h3><button class="btn green" onclick="decidir(${sol.id},'aprobar')">✓ Aprobar Crédito</button> <button class="btn red" onclick="decidir(${sol.id},'rechazar')">✗ Rechazar</button></div>`:''}`;
+}
+
+// ===== GARANTÍAS =====
+function vGarantias(){
+  const sol=evaluadas().slice().reverse()[0];
+  const cobertura=sol?Math.round(385000/sol.monto*100):0;
+  return `<h2 class="title">Gestión de Garantías</h2><div class="subtitle">Registro, tasación y validación de garantías</div>
+  <div class="card"><h3>Garantías registradas</h3>
+    <table><thead><tr><th>Tipo</th><th>Descripción</th><th>Tasación (Bs)</th><th>LTV</th><th>Estado</th></tr></thead><tbody>
+      <tr><td>Inmueble</td><td>Local comercial - Zona Central</td><td>385,000</td><td>64.9%</td><td><span class="badge b-aprob">Validada</span></td></tr>
+      <tr><td>Maquinaria</td><td>Equipo industrial</td><td>230,000</td><td>43.5%</td><td><span class="badge b-pend">En Revisión</span></td></tr>
+      <tr><td>Vehículo</td><td>Camión de carga 2022</td><td>145,000</td><td>58.0%</td><td><span class="badge b-aprob">Validada</span></td></tr>
+    </tbody></table></div>
+  <div class="grid2">
+    <div class="card"><h3>Documentos de Garantía</h3>
+      ${['Escritura Pública','Certificado de Gravámenes','Tasación Comercial','Inspección Física'].map(d=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eef2f7"><span>🗎 ${d}</span><span class="badge b-aprob">Verificado</span></div>`).join('')}
+      <div style="display:flex;justify-content:space-between;padding:9px 0"><span>🗎 Seguro de Inmueble</span><span class="badge b-pend">Pendiente</span></div></div>
+    <div class="card"><h3>Información de Cobertura</h3>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef2f7"><span style="color:var(--muted)">Monto del Crédito</span><b>Bs ${sol?sol.monto.toLocaleString():'250,000'}</b></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eef2f7"><span style="color:var(--muted)">Valor Total Garantías</span><b>Bs 760,000</b></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;background:#e3f7ef;border-radius:8px;padding:12px"><span>Cobertura</span><b style="color:var(--green)">${cobertura||304}%</b></div></div>
+  </div>`;
+}
+
+// ===== DOCUMENTOS =====
+function vDocumentos(){
+  return `<h2 class="title">Documentos</h2><div class="subtitle">Gestión de documentos del sistema crediticio</div>
+  <div class="kpis">${kpi('Total Documentos',6,'#e1f0fb','🗎','var(--cyan)')}${kpi('Aprobados',4,'#e3f7ef','✓','var(--green)')}${kpi('En Revisión',1,'#fdf2e3','⏱','var(--amber)')}${kpi('Rechazados',1,'#fdeaea','✗','var(--red)')}</div>
+  <div class="card"><h3>Documentos Recientes</h3>
+    <table><thead><tr><th>ID</th><th>Documento</th><th>Tipo</th><th>Estado</th></tr></thead><tbody>
+      <tr><td>DOC-001</td><td>Estados Financieros 2025</td><td>Financiero</td><td><span class="badge b-aprob">Aprobado</span></td></tr>
+      <tr><td>DOC-002</td><td>Declaración de Impuestos</td><td>Tributario</td><td><span class="badge b-aprob">Aprobado</span></td></tr>
+      <tr><td>DOC-003</td><td>Flujo de Caja Proyectado</td><td>Financiero</td><td><span class="badge b-pend">En Revisión</span></td></tr>
+      <tr><td>DOC-004</td><td>Referencias Comerciales</td><td>Legal</td><td><span class="badge b-aprob">Aprobado</span></td></tr>
+      <tr><td>DOC-005</td><td>Escritura de Garantía</td><td>Legal</td><td><span class="badge b-aprob">Aprobado</span></td></tr>
+      <tr><td>DOC-006</td><td>Tasación de Inmueble</td><td>Garantías</td><td><span class="badge b-rech">Rechazado</span></td></tr>
+    </tbody></table></div>`;
+}
+
+// ===== CLIENTES =====
+function vClientes(){
+  return `<h2 class="title">Clientes</h2><div class="subtitle">Gestión de cartera de clientes</div>
+  <div class="kpis">${kpi('Total Clientes',CLIENTES.length,'#e1f0fb','👥','var(--cyan)')}${kpi('Empresas',CLIENTES.filter(c=>c.tipo==='empresa').length,'#ece3fb','🏢','#9b59b6')}${kpi('Activos',CLIENTES.length,'#e3f7ef','✓','var(--green)')}</div>
+  <div class="card"><h3>Cartera de clientes</h3>
+    <table><thead><tr><th>Código</th><th>Nombre</th><th>NIT</th><th>Tipo</th><th>Scoring</th></tr></thead><tbody>
+      ${CLIENTES.map(c=>`<tr><td>${c.codigo}</td><td><b>${c.nombre}</b></td><td>${c.nit}</td><td>${c.tipo}</td><td><b style="color:${c.scoring>=700?'var(--green)':c.scoring>=500?'var(--amber)':c.scoring>0?'var(--red)':'var(--muted)'}">${c.scoring||'—'}</b></td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+// ===== REPORTES =====
+function vReportes(){
+  const s=stats();const tasa=s.total?Math.round(s.aprob/s.total*100):0;
+  return `<h2 class="title">Reportes</h2><div class="subtitle">Análisis y reportes del sistema crediticio</div>
+  <div class="kpis">
+    ${kpi('Tasa de Aprobación',tasa+'%','#e3f7ef','📈','var(--green)')}
+    ${kpi('Solicitudes Totales',s.total,'#e1f0fb','📄','var(--cyan)')}
+    ${kpi('En Proceso',s.proc,'#fdf2e3','⏱','var(--amber)')}
+    ${kpi('Monto Total (Bs)',SOLS.reduce((a,b)=>a+b.monto,0).toLocaleString(),'#ece3fb','💰','#9b59b6')}
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Solicitudes por Estado</h3><canvas id="chRep1" height="200"></canvas></div>
+    <div class="card"><h3>Montos por Cliente</h3><canvas id="chRep2" height="200"></canvas></div>
+  </div>
+  <div class="card"><h3>Reportes Disponibles</h3>
+    <table><thead><tr><th>Reporte</th><th>Frecuencia</th></tr></thead><tbody>
+      <tr><td>Reporte de Cartera Crediticia</td><td>Mensual</td></tr>
+      <tr><td>Reporte de Morosidad</td><td>Semanal</td></tr>
+      <tr><td>Reporte de Productividad</td><td>Mensual</td></tr>
+      <tr><td>Reporte de Riesgos</td><td>Trimestral</td></tr>
+    </tbody></table></div>`;
+}
+function drawReportes(){
+  const s=stats();
+  new Chart($('chRep1'),{type:'bar',data:{labels:['Aprobado','En proceso','Rechazado'],datasets:[{data:[s.aprob,s.proc,s.rech],backgroundColor:['#16a085','#e67e22','#e74c3c']}]},options:{plugins:{legend:{display:false}}}});
+  const pc={};SOLS.forEach(x=>pc[x.clienteNombre]=(pc[x.clienteNombre]||0)+x.monto);
+  new Chart($('chRep2'),{type:'doughnut',data:{labels:Object.keys(pc).length?Object.keys(pc):['—'],datasets:[{data:Object.values(pc).length?Object.values(pc):[1],backgroundColor:['#1fa0e0','#16a085','#e67e22','#9b59b6','#e91e8c']}]},options:{plugins:{legend:{position:'bottom'}}}});
+}
+
+// ===== CONFIG =====
+function vConfig(){
+  return `<h2 class="title">Configuración</h2><div class="subtitle">Administración y configuración del sistema</div>
+  <div class="grid2">
+    <div class="card"><h3>Información del Usuario</h3>
+      <label>Nombre Completo</label><input value="${USER.nombre}" readonly>
+      <label>Cargo</label><input value="${rolLabel(USER.rol)}" readonly>
+      <label>Email</label><input value="${USER.rol}@bdp.com.bo" readonly></div>
+    <div class="card"><h3>Seguridad y Autenticación</h3>
+      <div style="display:flex;justify-content:space-between;padding:12px;background:#e3f7ef;border-radius:8px;margin-bottom:10px"><div><b>✓ Autenticación Multifactor (MFA)</b><div style="font-size:12px;color:var(--muted)">Activo</div></div></div>
+      <div style="display:flex;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px"><div><b>🔑 JWT Token</b><div style="font-size:12px;color:var(--muted)">Sesión activa · expira en 8h</div></div></div>
+      <div style="display:flex;justify-content:space-between;padding:12px;border:1px solid var(--border);border-radius:8px"><div><b>🔒 Cifrado</b><div style="font-size:12px;color:var(--muted)">Contraseñas con hash bcrypt</div></div></div></div>
+  </div>`;
+}
+
+// ===== HELPERS =====
+function tituloVacio(t,s,msg){return `<h2 class="title">${t}</h2><div class="subtitle">${s}</div><div class="card"><p style="color:var(--muted);text-align:center;padding:30px">${msg}</p></div>`;}
+function setActive(v){document.querySelectorAll('#nav a').forEach(x=>x.classList.toggle('active',x.dataset.v===v));}
+async function doEval(id){
+  const financieros={activoCorriente:2500,pasivoCorriente:100000,activoTotal:850000,pasivoTotal:472000,cuotaMensual:15750,ingresosMensuales:45000,montoCredito:250000,valorGarantias:385000};
+  await api('POST',`/api/solicitudes/${id}/evaluar`,{financieros,historialCrediticio:0.1,garantias:0.90,antiguedadCliente:0.90,sectorEconomico:0.80});
+  goScoring(id);
+}
+async function decidir(id,decision){
+  await api('PATCH',`/api/solicitudes/${id}/decision`,{decision,observacion:decision==='aprobar'?'Cumple criterios de riesgo':'No cumple criterios'});
+  await loadSols();render(CURRENT);
+}
+$('password').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+</script>
+</body>
+</html>
